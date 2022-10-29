@@ -31,21 +31,21 @@ public class BuscaProfundidade {
             Node node = borda.pop();
             visitados.add(node);
 
+            if (node.equals(goal)) {
+                System.out.println("Caminho encontrado!");
+                System.out.println("Custo: " + node.getCost());
+                System.out.println("Caminho: " + node.getPath());
+                return;
+            }
+
             for (Transition transition : node.getTransitions()) {
                 Node to = transition.getTo();
                 if (!visitados.contains(to) && !borda.contains(to)) {
-                    if (to.equals(goal)) {
-                        System.out.println("Objetivo encontrado!");
-                        System.out.println("Caminho: " + to.getPath());
-                        System.out.println("Custo: " + to.getCost());
-                        return;
-                    }
-
-                    //Adicionar filho a borda
                     to.setParent(node);
-                    to.setCost(node.getCost() + transition.getCost());
+                    to.setCost(transition.getCost() + node.getCost());
                     borda.add(to);
                 }
+                
             }
         }
         

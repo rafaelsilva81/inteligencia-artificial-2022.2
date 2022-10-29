@@ -84,7 +84,8 @@ public class App {
         //System.out.println(romania);
         
         //Receber argumentos da linha de comando
-        //String[] args = {"Arad", "Bucharest"};
+        //String arg1 = args[0];
+        //String arg2 = args[1];
         
         System.out.println("\n");
         
