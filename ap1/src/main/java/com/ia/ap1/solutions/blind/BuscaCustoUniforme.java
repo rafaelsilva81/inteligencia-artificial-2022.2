@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.stream.Collectors;
 
-import com.ia.ap1.issues.Node;
-import com.ia.ap1.issues.Transition;
-import com.ia.ap1.issues.WorldMap;
+import com.ia.ap1.problem.Node;
+import com.ia.ap1.problem.Transition;
+import com.ia.ap1.problem.WorldMap;
 
 public class BuscaCustoUniforme {
 
@@ -23,8 +23,8 @@ public class BuscaCustoUniforme {
     }
 
     public void search() {
-        // Fila de prioridade, comparar pelo custo acumulado
 
+        // Fila de prioridade, comparar pelo custo acumulado
         Comparator<Node> comparator = new Comparator<Node>() {
             @Override
             public int compare(Node n1, Node n2) {
@@ -33,7 +33,7 @@ public class BuscaCustoUniforme {
         };
 
         PriorityQueue<Node> borda = new PriorityQueue<Node>(comparator);
-        List<Node> visitados = new ArrayList<>();
+        List<Node> explorados = new ArrayList<>();
 
         List<String> startChildrens = graph.getStateTransitions(start).stream()
                 .map(transition -> (transition.getTo())).collect(Collectors.toList());
@@ -42,7 +42,7 @@ public class BuscaCustoUniforme {
 
         while (!borda.isEmpty()) {
             Node node = borda.remove();
-            visitados.add(node);
+            explorados.add(node);
 
             if (node.name.equals(goal)) {
                 System.out.println("Objetivo encontrado!");
@@ -61,14 +61,14 @@ public class BuscaCustoUniforme {
                     return n.name == child;
                 });
 
-                boolean inVisitados = visitados.stream().anyMatch(n -> {
+                boolean inexplorados = explorados.stream().anyMatch(n -> {
                     return n.name == child;
                 });
 
                 // custo total da transição
                 int cost = node.getCost() + transition.getCost();
 
-                if (!inBorda && !inVisitados) {
+                if (!inBorda && !inexplorados) {
                     borda.add(Node.createNodeWithParent(child, childrens, cost, node));
                 } else if (inBorda) {
                     int oldCost = borda.stream().filter(n -> n.name == child).findAny().orElse(null).cost_accumulated;

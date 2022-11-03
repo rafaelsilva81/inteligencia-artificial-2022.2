@@ -1,6 +1,7 @@
-package com.ia.ap1;
+package com.ia.ap1.apps;
 
-import com.ia.ap1.issues.WorldMap;
+import com.ia.ap1.Util;
+import com.ia.ap1.problem.WorldMap;
 import com.ia.ap1.solutions.blind.BuscaProfundidade;
 
 public class AppBuscaProfundidade {

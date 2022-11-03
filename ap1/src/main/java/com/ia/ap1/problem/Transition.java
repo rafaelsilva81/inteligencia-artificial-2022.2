@@ -1,4 +1,4 @@
-package com.ia.ap1.issues;
+package com.ia.ap1.problem;
 
 public class Transition {
 

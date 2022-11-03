@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.ia.ap1.issues.Node;
-import com.ia.ap1.issues.Transition;
-import com.ia.ap1.issues.WorldMap;
+import com.ia.ap1.problem.Node;
+import com.ia.ap1.problem.Transition;
+import com.ia.ap1.problem.WorldMap;
 
 public class BuscaLargura {
 
@@ -22,9 +22,12 @@ public class BuscaLargura {
     }
 
     public Node search() {
-        List<Node> borda = new ArrayList<Node>();
-        List<Node> visitados = new ArrayList<Node>();
+        // Não há um comparador, só pega o menor da lista sempre
 
+        List<Node> borda = new ArrayList<Node>();
+        List<Node> explorados = new ArrayList<Node>();
+
+        // Obtem os filhos do estado inicial
         List<String> startChildrens = graph.getStateTransitions(start).stream()
                 .map(transition -> (transition.getTo())).collect(Collectors.toList());
 
@@ -32,7 +35,7 @@ public class BuscaLargura {
 
         while (!borda.isEmpty()) {
             Node node = borda.remove(0);
-            visitados.add(node);
+            explorados.add(node);
 
             if (node.getName().equals(goal)) {
                 System.out.println("Objetivo encontrado!");
@@ -44,15 +47,24 @@ public class BuscaLargura {
             for (String child : node.getChildrens()) {
 
                 if (!borda.stream().anyMatch(n -> {
-                    return n.name == child;
-                }) && !visitados.stream().anyMatch(n -> {
+                    // Filtra a borda, buscando se o filho já está na borda
+                    return n.name == child; // Checa pelo nome do nó (estado)
+                }) && !explorados.stream().anyMatch(n -> {
+                    // Filtra os explorados
                     return n.name == child;
                 })) {
+                    // Se o filho não tiver na borda nem nos explorados
 
-                    List<String> childrens = graph.getStateTransitions(child).stream()
-                            .map(transition -> (transition.getTo())).collect(Collectors.toList());
+                    // Otem lista de filhos
+                    List<String> childrens = graph.getStateTransitions(child)
+                            .stream() // Converte para stream
+                            .map(transition -> (transition.getTo())) // Mapeia para o destino da transição
+                            .collect(Collectors.toList()); // Converte para lista
 
+                    // Obtem transicao
                     Transition transition = graph.getUniqueTransition(node.name, child);
+
+                    // Insere na borda
                     borda.add(Node.createNodeWithParent(child, childrens, node.getCost() + transition.getCost(), node));
                 }
             }

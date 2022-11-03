@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
-import com.ia.ap1.issues.Node;
-import com.ia.ap1.issues.Transition;
-import com.ia.ap1.issues.WorldMap;
+import com.ia.ap1.problem.Node;
+import com.ia.ap1.problem.Transition;
+import com.ia.ap1.problem.WorldMap;
 
 public class BuscaProfundidade {
 
@@ -25,7 +25,7 @@ public class BuscaProfundidade {
     public void search() {
 
         Stack<Node> borda = new Stack<Node>();
-        ArrayList<Node> visitados = new ArrayList<Node>();
+        ArrayList<Node> explorados = new ArrayList<Node>();
 
         List<String> startChildrens = graph.getStateTransitions(start).stream()
                 .map(transition -> (transition.getTo())).collect(Collectors.toList());
@@ -34,7 +34,7 @@ public class BuscaProfundidade {
 
         while (!borda.isEmpty()) {
             Node node = borda.pop();
-            visitados.add(node);
+            explorados.add(node);
 
             if (node.name.equals(goal)) {
                 System.out.println("Caminho encontrado!");
@@ -47,21 +47,26 @@ public class BuscaProfundidade {
 
                 boolean inBorda = borda.stream().anyMatch(n -> {
                     return n.name == child;
-                });
+                }); // Verifica se o filho está na borda
 
-                boolean inVisitados = visitados.stream().anyMatch(n -> {
+                boolean inexplorados = explorados.stream().anyMatch(n -> {
                     return n.name == child;
-                });
+                }); // Verifica se o filho está nos explorados
 
-                List<String> childrens = graph.getStateTransitions(child).stream()
-                        .map(transition -> (transition.getTo())).collect(Collectors.toList());
+                // Obtem filhos
+                List<String> childrens = graph.getStateTransitions(child)
+                        .stream()
+                        .map(transition -> (transition.getTo()))
+                        .collect(Collectors.toList());
+
+                // Obtem transicoes
                 Transition transition = graph.getUniqueTransition(node.name, child);
 
                 // custo total da transição
                 int cost = node.getCost() + transition.getCost();
 
-                if (!inBorda && !inVisitados) {
-
+                // Se o filho não está na borda e não está nos explorados
+                if (!inBorda && !inexplorados) {
                     borda.add(Node.createNodeWithParent(child, childrens, cost, node));
                 }
 

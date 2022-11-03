@@ -8,9 +8,9 @@ import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.stream.Collectors;
 
-import com.ia.ap1.issues.Node;
-import com.ia.ap1.issues.Transition;
-import com.ia.ap1.issues.WorldMap;
+import com.ia.ap1.problem.Node;
+import com.ia.ap1.problem.Transition;
+import com.ia.ap1.problem.WorldMap;
 
 public class BuscaAEstrela {
 
@@ -22,35 +22,12 @@ public class BuscaAEstrela {
     private String start;
     private String goal;
 
+    /* OBS: DADOS HEURISTICOS FUNCIONAM APENAS PARA BUCHAREST!! */
     public void CompletarDadosHeuristicos() {
-        /*
-         * this.distancia_heuristica = [
-         * "Arad": 366,
-         * "Bucharest": 0,
-         * "Craiova": 160,
-         * "Drobeta": 242,
-         * "Eforie": 161,
-         * "Fagaras": 176,
-         * "Giurgiu": 77,
-         * "Hirsova": 151,
-         * "Iasi": 226,
-         * "Lugoj": 244,
-         * "Mehadia": 241,
-         * "Neamt": 234,
-         * "Oradea": 380,
-         * "Pitesti": 100,
-         * "Rimnicu Vilcea": 193,
-         * "Sibiu": 253,
-         * "Timisoara": 329,
-         * "Urziceni": 80,
-         * "Vaslui": 199,
-         * "Zerind": 374,
-         * ]
-         */
         this.dados_heuristicos.put("Arad", 366);
         this.dados_heuristicos.put("Bucharest", 0);
         this.dados_heuristicos.put("Craiova", 160);
-        this.dados_heuristicos.put("Drobeta", 242);
+        this.dados_heuristicos.put("Dobreta", 242);
         this.dados_heuristicos.put("Eforie", 161);
         this.dados_heuristicos.put("Fagaras", 176);
         this.dados_heuristicos.put("Giurgiu", 77);
@@ -79,8 +56,12 @@ public class BuscaAEstrela {
 
     public void search() {
 
-        // nesse algoritmo, a comparação é feita pela soma do custo acumulado e o dado
-        // heuristico
+        /*
+         * nesse algoritmo,
+         * a comparação é feita
+         * pela diferença da soma do custo acumulado
+         * e o dado heuristico
+         */
         Comparator<? super Node> comparator = new Comparator<Node>() {
             @Override
             public int compare(Node o1, Node o2) {
@@ -90,7 +71,7 @@ public class BuscaAEstrela {
         };
 
         PriorityQueue<Node> borda = new PriorityQueue<Node>(comparator);
-        List<Node> visitados = new ArrayList<>();
+        List<Node> explorados = new ArrayList<>();
 
         List<String> startChildrens = graph.getStateTransitions(start).stream()
                 .map(transition -> (transition.getTo())).collect(Collectors.toList());
@@ -99,7 +80,7 @@ public class BuscaAEstrela {
 
         while (!borda.isEmpty()) {
             Node node = borda.remove();
-            visitados.add(node);
+            explorados.add(node);
 
             if (node.name.equals(goal)) {
                 System.out.println("Objetivo encontrado!");
@@ -110,24 +91,33 @@ public class BuscaAEstrela {
 
             for (String child : node.getChildrens()) {
 
-                List<String> childrens = graph.getStateTransitions(child).stream()
-                        .map(transition -> (transition.getTo())).collect(Collectors.toList());
+                List<String> childrens = graph.getStateTransitions(child)
+                        .stream()
+                        .map(transition -> (transition.getTo()))
+                        .collect(Collectors.toList());
+
                 Transition transition = graph.getUniqueTransition(node.name, child);
 
                 boolean inBorda = borda.stream().anyMatch(n -> {
                     return n.name == child;
                 });
 
-                boolean inVisitados = visitados.stream().anyMatch(n -> {
+                boolean inexplorados = explorados.stream().anyMatch(n -> {
                     return n.name == child;
                 });
 
                 // custo total da transição
                 int cost = node.getCost() + transition.getCost();
 
-                if (!inBorda && !inVisitados) {
+                if (!inBorda && !inexplorados) {
                     borda.add(Node.createNodeWithParent(child, childrens, cost, node));
                 } else if (inBorda) {
+                    /*
+                     * Aqui checa se o custo do nó que está na
+                     * borda é maior que o custo do nó que está sendo analisado.
+                     * 
+                     * Só adiciona o nó na borda se o custo for menor (melhor caminho)
+                     */
                     int oldCost = borda.stream().filter(n -> n.name == child).findAny().orElse(null).cost_accumulated;
                     if (oldCost > cost) {
                         // Altera para um novo caminho mais barato
