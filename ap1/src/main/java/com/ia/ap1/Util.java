@@ -1,8 +1,10 @@
 package com.ia.ap1;
 
-import com.ia.ap1.issues.WorldMap;
+import com.ia.ap1.problem.WorldMap;
 
 public class Util {
+
+    // Construção do mapa da romênia
     public static WorldMap getWorldMapForRomania() {
         WorldMap graph = new WorldMap();
 
@@ -33,6 +35,7 @@ public class Util {
         return graph;
     }
 
+    // Obter dados via terminal
     public static String getSourceByArguments(String[] args, String defaultState, WorldMap world) {
         String source = args.length > 0 ? args[0] : "";
 

@@ -1,4 +1,4 @@
-package com.ia.ap1.issues;
+package com.ia.ap1.problem;
 
 import java.util.ArrayList;
 import java.util.List;
