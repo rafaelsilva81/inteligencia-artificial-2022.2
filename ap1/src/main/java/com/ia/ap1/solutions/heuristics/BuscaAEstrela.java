@@ -102,14 +102,14 @@ public class BuscaAEstrela {
                     return n.name == child;
                 });
 
-                boolean inexplorados = explorados.stream().anyMatch(n -> {
+                boolean inExplorados = explorados.stream().anyMatch(n -> {
                     return n.name == child;
                 });
 
                 // custo total da transição
                 int cost = node.getCost() + transition.getCost();
 
-                if (!inBorda && !inexplorados) {
+                if (!inBorda && !inExplorados) {
                     borda.add(Node.createNodeWithParent(child, childrens, cost, node));
                 } else if (inBorda) {
                     /*
