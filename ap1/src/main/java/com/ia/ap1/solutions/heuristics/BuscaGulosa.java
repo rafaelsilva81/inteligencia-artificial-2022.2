@@ -27,7 +27,7 @@ public class BuscaGulosa {
         this.dados_heuristicos.put("Arad", 366);
         this.dados_heuristicos.put("Bucharest", 0);
         this.dados_heuristicos.put("Craiova", 160);
-        this.dados_heuristicos.put("Dobreta", 242);
+        this.dados_heuristicos.put("Drobeta", 242);
         this.dados_heuristicos.put("Eforie", 161);
         this.dados_heuristicos.put("Fagaras", 176);
         this.dados_heuristicos.put("Giurgiu", 77);
@@ -111,7 +111,7 @@ public class BuscaGulosa {
                     /*
                      * Aqui checa se o custo do nó que está na
                      * borda é maior que o custo do nó que está sendo analisado.
-                     * 
+                     *
                      * Só adiciona o nó na borda se o custo for menor (melhor caminho)
                      */
                     int oldCost = borda.stream().filter(n -> n.name == child).findAny().orElse(null).cost_accumulated;
