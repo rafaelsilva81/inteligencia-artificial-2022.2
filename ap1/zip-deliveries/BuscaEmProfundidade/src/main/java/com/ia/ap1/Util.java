@@ -15,8 +15,8 @@ public class Util {
         graph.addTwoWayTransition("Sibiu", "Rimnicu Vilcea", 80);
         graph.addTwoWayTransition("Timisoara", "Lugoj", 111);
         graph.addTwoWayTransition("Lugoj", "Mehadia", 70);
-        graph.addTwoWayTransition("Mehadia", "Dobreta", 75);
-        graph.addTwoWayTransition("Dobreta", "Craiova", 120);
+        graph.addTwoWayTransition("Mehadia", "Drobeta", 75);
+        graph.addTwoWayTransition("Drobeta", "Craiova", 120);
         graph.addTwoWayTransition("Craiova", "Rimnicu Vilcea", 146);
         graph.addTwoWayTransition("Craiova", "Pitesti", 138);
         graph.addTwoWayTransition("Rimnicu Vilcea", "Pitesti", 97);
